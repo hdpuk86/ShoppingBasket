@@ -40,4 +40,32 @@ public class TestTill {
         till.setCurrentSaleTotal(50);
         assertEquals(50, till.getCurrentSaleTotal(), 0.1);
     }
+
+    @Test
+    public void canApplyBogofDiscountEven_2() throws Exception {
+        Item potato = new Item("Potato", 2, true);
+        double actual = till.bogofDiscountEven(potato, 2);
+        assertEquals(2, actual, 0.1);
+    }
+
+    @Test
+    public void canApplyBogofDiscountEven_4() throws Exception {
+        Item potato = new Item("Potato", 3, true);
+        double actual = till.bogofDiscountEven(potato, 4);
+        assertEquals(6, actual, 0.1);
+    }
+
+    @Test
+    public void canApplyBogofDiscountOdd_3() throws Exception {
+        Item potato = new Item("Potato", 2, true);
+        double actual = till.bogofDiscountOdd(potato, 3);
+        assertEquals(4, actual, 0.1);
+    }
+
+    @Test
+    public void canApplyBogofDiscountOdd_5() throws Exception {
+        Item potato = new Item("Potato", 2, true);
+        double actual = till.bogofDiscountOdd(potato, 5);
+        assertEquals(6, actual, 0.1);
+    }
 }

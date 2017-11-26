@@ -21,8 +21,8 @@ public class TestCustomer {
 
     @Before
     public void setUp() throws Exception {
-        sandwich = new Item("Tuna Mayo Sub", 1.8, Category.FOODTOGO, true);
-        cheese = new Item("Cheddar", 2.4, Category.DAIRY, false);
+        sandwich = new Item("Tuna Mayo Sub", 1.8, true);
+        cheese = new Item("Cheddar", 2.4, false);
         basket = new Basket();
         customer = new Customer(basket, false);
     }

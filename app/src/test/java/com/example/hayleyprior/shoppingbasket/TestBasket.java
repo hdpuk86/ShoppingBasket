@@ -16,8 +16,8 @@ public class TestBasket {
 
     @Before
     public void setUp() throws Exception {
-        bread = new Item("Hovis", 1.0, Category.BAKERY, true);
-        apple = new Item("Pink Lady", 0.5, Category.FRUIT, false);
+        bread = new Item("Hovis", 1.0, true);
+        apple = new Item("Pink Lady", 0.5, false);
         basket = new Basket();
     }
 

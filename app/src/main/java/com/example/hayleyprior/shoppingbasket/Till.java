@@ -29,4 +29,12 @@ public class Till {
     public void setCurrentSaleTotal(double newAmount) {
         this.currentSaleTotal = newAmount;
     }
+
+    public double bogofDiscountEven(Item item, int numberOfItems){
+        return numberOfItems / 2 * item.getPrice();
+    }
+
+    public double bogofDiscountOdd(Item item, int numberOfItems){
+        return (numberOfItems - 1) / 2 * item.getPrice() + item.getPrice();
+    }
 }

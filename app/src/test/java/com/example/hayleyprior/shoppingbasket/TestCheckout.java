@@ -6,7 +6,6 @@ import org.junit.Test;
 import java.util.ArrayList;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
 
 /**
  * Created by hayleyprior on 25/11/2017.
@@ -16,24 +15,29 @@ public class TestCheckout {
 
     private Checkout checkout;
     private Customer customer;
-    private Basket basket;
     private Item catFood;
     private Item tablets;
     private Till till;
 
-
     @Before
     public void setUp() throws Exception {
-        basket = new Basket();
+        Basket basket = new Basket();
         till = new Till();
-        customer = new Customer(basket, false);
-        catFood = new Item("Felix", 5.50, Category.PETFOOD, true);
-        tablets = new Item("Paracetamol", 2.50, Category.PHARMACY, false);
+        catFood = new Item("Felix", 5.50, true);
+        tablets = new Item("Paracetamol", 2.50, false);
 
+        customer = new Customer(basket, false);
         customer.addItem(catFood);
         customer.addItem(tablets);
 
         checkout = new Checkout(till, customer);
+    }
+
+    @Test
+    public void canGetBasket() throws Exception {
+        ArrayList<Item> basket = checkout.getBasket();
+        String firstItemName = basket.get(0).getName();
+        assertEquals("Felix", firstItemName);
     }
 
     @Test
@@ -46,7 +50,7 @@ public class TestCheckout {
     @Test
     public void discountsBy10PercentIfOver20() throws Exception {
         customer.emptyBasket();
-        Item phone = new Item("Iphone", 100, Category.ELECTRICAL, false);
+        Item phone = new Item("Iphone", 100, false);
         customer.addItem(phone);
         assertEquals(90, checkout.chargeCustomer(), 0.1);
     }
@@ -65,6 +69,81 @@ public class TestCheckout {
     @Test
     public void applyLoyaltyDiscount() throws Exception {
         customer.aquireLoyaltyCard();
-        assertEquals(7.84, checkout.chargeCustomer(), 0.1);
+        assertEquals(7.84, checkout.chargeCustomer(), 0.01);
+    }
+
+    @Test
+    public void appliesLoyaltyDiscountAfter10PercentDiscount() throws Exception {
+        customer.emptyBasket();
+        customer.aquireLoyaltyCard();
+        Item wine = new Item("Red Wine", 40, false);
+        customer.addItem(wine);
+        assertEquals(35.28, checkout.chargeCustomer(), 0.01);
+    }
+
+    @Test
+    public void canGetBogofItems() throws Exception {
+        ArrayList<Item> basket = customer.getItems();
+        ArrayList<Item> bogof = checkout.getBOGOFItems(basket);
+        assertEquals(1, bogof.size());
+    }
+
+    @Test
+    public void canGetNonBogofItems() throws Exception {
+        ArrayList<Item> basket = customer.getItems();
+        ArrayList<Item> nonBogof = checkout.getNotOnBogof(basket);
+        assertEquals(1, nonBogof.size());
+    }
+
+    @Test
+    public void canCountSameItems() throws Exception {
+        ArrayList<Item> basket = checkout.getBasket();
+        basket.add(catFood);
+        basket.add(catFood);
+        assertEquals(3, checkout.countSameItems(catFood, basket));
+        assertEquals(1, checkout.countSameItems(tablets, basket));
+        assertEquals(4, basket.size());
+    }
+
+    @Test
+    public void applyBogofEven_2() throws Exception {
+        ArrayList<Item> bogof = new ArrayList<>();
+        bogof.add(catFood);
+        bogof.add(catFood);
+        checkout.scanAllItems(bogof);
+        assertEquals(5.5, till.getCurrentSaleTotal(), 0.1);
+    }
+
+    @Test
+    public void applyBogofEven_4() throws Exception {
+        ArrayList<Item> bogof = new ArrayList<>();
+        bogof.add(catFood);
+        bogof.add(catFood);
+        bogof.add(catFood);
+        bogof.add(catFood);
+        checkout.scanAllItems(bogof);
+        assertEquals(11, till.getCurrentSaleTotal(), 0.1);
+    }
+
+    @Test
+    public void applyBogofOdd_3() throws Exception {
+        ArrayList<Item> bogof = new ArrayList<>();
+        bogof.add(catFood);
+        bogof.add(catFood);
+        bogof.add(catFood);
+        checkout.scanAllItems(bogof);
+        assertEquals(11, till.getCurrentSaleTotal(), 0.1);
+    }
+
+    @Test
+    public void applyBogofOdd_5() throws Exception {
+        ArrayList<Item> bogof = new ArrayList<>();
+        bogof.add(catFood);
+        bogof.add(catFood);
+        bogof.add(catFood);
+        bogof.add(catFood);
+        bogof.add(catFood);
+        checkout.scanAllItems(bogof);
+        assertEquals(16.5, till.getCurrentSaleTotal(), 0.1);
     }
 }
