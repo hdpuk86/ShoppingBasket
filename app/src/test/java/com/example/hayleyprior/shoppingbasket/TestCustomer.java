@@ -3,6 +3,8 @@ package com.example.hayleyprior.shoppingbasket;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.ArrayList;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 
@@ -22,38 +24,46 @@ public class TestCustomer {
         sandwich = new Item("Tuna Mayo Sub", 1.8, Category.FOODTOGO, true);
         cheese = new Item("Cheddar", 2.4, Category.DAIRY, false);
         basket = new Basket();
-        customer = new Customer(false);
+        customer = new Customer(basket, false);
     }
 
     @Test
     public void canAddItem() throws Exception {
-        customer.addItem(basket, cheese);
+        customer.addItem(cheese);
         assertEquals(1, basket.countItems());
     }
 
     @Test
     public void canRemoveItem() throws Exception {
-        customer.addItem(basket, cheese);
-        customer.addItem(basket, sandwich);
-        customer.removeItem(basket, cheese);
+        customer.addItem(cheese);
+        customer.addItem(sandwich);
+        customer.removeItem(cheese);
         assertEquals(1, basket.countItems());
     }
 
     @Test
     public void itemRemovedIsCorrectItem() throws Exception {
-        customer.addItem(basket, cheese);
-        customer.addItem(basket, sandwich);
-        customer.removeItem(basket, cheese);
+        customer.addItem(cheese);
+        customer.addItem(sandwich);
+        customer.removeItem(cheese);
         String itemInBasket = basket.getItems().get(0).getName();
         assertEquals("Tuna Mayo Sub", itemInBasket);
     }
 
     @Test
     public void canEmptyBasket() throws Exception {
-        customer.addItem(basket, cheese);
-        customer.addItem(basket, sandwich);
-        customer.emptyBasket(basket);
+        customer.addItem(cheese);
+        customer.addItem(sandwich);
+        customer.emptyBasket();
         assertEquals(0, basket.countItems());
+    }
+
+    @Test
+    public void canGetBasket() throws Exception {
+        customer.addItem(cheese);
+        customer.addItem(sandwich);
+        ArrayList<Item> items = customer.getItems();
+        assertEquals(2, items.size());
     }
 
     @Test
