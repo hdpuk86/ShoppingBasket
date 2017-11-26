@@ -32,7 +32,7 @@ public class Customer {
         return this.hasLoyaltyCard;
     }
 
-    public void getLoyaltyCard() {
+    public void aquireLoyaltyCard() {
         this.hasLoyaltyCard = true;
     }
 

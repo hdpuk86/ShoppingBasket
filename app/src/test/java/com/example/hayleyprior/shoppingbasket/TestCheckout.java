@@ -51,5 +51,20 @@ public class TestCheckout {
         assertEquals(90, checkout.chargeCustomer(), 0.1);
     }
 
+    @Test
+    public void canCheckLoyaltyCard_True() throws Exception {
+        customer.aquireLoyaltyCard();
+        assertEquals(true, checkout.customerHasLoyaltyCard());
+    }
 
+    @Test
+    public void canCheckLoyaltyCard_False() throws Exception {
+        assertEquals(false, checkout.customerHasLoyaltyCard());
+    }
+
+    @Test
+    public void applyLoyaltyDiscount() throws Exception {
+        customer.aquireLoyaltyCard();
+        assertEquals(7.84, checkout.chargeCustomer(), 0.1);
+    }
 }

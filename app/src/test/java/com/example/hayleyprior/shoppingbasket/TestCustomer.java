@@ -67,14 +67,14 @@ public class TestCustomer {
     }
 
     @Test
-    public void canGetLoyaltyCard() throws Exception {
-        customer.getLoyaltyCard();
+    public void canAquireLoyaltyCard() throws Exception {
+        customer.aquireLoyaltyCard();
         assertEquals(true, customer.hasLoyaltyCard());
     }
 
     @Test
     public void canLoseLoyaltyCard() throws Exception {
-        customer.getLoyaltyCard();
+        customer.aquireLoyaltyCard();
         customer.loseLoyaltyCard();
         assertEquals(false, customer.hasLoyaltyCard());
     }

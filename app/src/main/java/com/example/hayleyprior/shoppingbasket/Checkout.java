@@ -26,16 +26,33 @@ public class Checkout {
         return this.till.getCurrentSaleTotal();
     }
 
-    public double discount10Percent(double amount){
-        return this.till.discountBy(10, amount);
+    public double discountBy(double percent, double amount){
+        return this.till.discountBy(percent, amount);
+    }
+
+    public boolean customerHasLoyaltyCard(){
+        return this.customer.hasLoyaltyCard();
+    }
+
+    public void applyLoyaltyDiscount(double amount) {
+        if(customerHasLoyaltyCard()){
+            this.till.setCurrentSaleTotal(discountBy(2, amount));
+        }
+    }
+
+    public void apply10percentDiscount(){
+        this.till.setCurrentSaleTotal(discountBy(10, getTotal()));
     }
 
     public double chargeCustomer(){
         scanAllItems(customer.getItems());
         if(getTotal() >= 20){
-            double discountedPrice = discount10Percent(getTotal());
-            this.till.setCurrentSaleTotal(discountedPrice);
+            apply10percentDiscount();
+        }
+        if(customerHasLoyaltyCard()){
+            applyLoyaltyDiscount(getTotal());
         }
         return till.getCurrentSaleTotal();
     }
+
 }
