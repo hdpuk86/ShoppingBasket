@@ -5,6 +5,7 @@ package com.example.hayleyprior.shoppingbasket;
  */
 
 public class Item {
+
     private String name;
     private double price;
     private Boolean onBOGOF;

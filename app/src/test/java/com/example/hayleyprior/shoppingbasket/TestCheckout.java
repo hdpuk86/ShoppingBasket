@@ -25,11 +25,9 @@ public class TestCheckout {
         till = new Till();
         catFood = new Item("Felix", 5.50, true);
         tablets = new Item("Paracetamol", 2.50, false);
-
         customer = new Customer(basket, false);
         customer.addItem(catFood);
         customer.addItem(tablets);
-
         checkout = new Checkout(till, customer);
     }
 
@@ -145,5 +143,52 @@ public class TestCheckout {
         bogof.add(catFood);
         checkout.scanAllItems(bogof);
         assertEquals(16.5, till.getCurrentSaleTotal(), 0.1);
+    }
+
+    @Test
+    public void ignoresBogofIfNotOnOffer_Even() throws Exception {
+        ArrayList<Item> items = new ArrayList<>();
+        items.add(tablets);
+        items.add(tablets);
+        checkout.scanAllItems(items);
+        assertEquals(5.0, till.getCurrentSaleTotal(), 0.1);
+    }
+
+    @Test
+    public void ignoresBogofIfNotOnOffer_Odd() throws Exception {
+        ArrayList<Item> items = new ArrayList<>();
+        items.add(tablets);
+        items.add(tablets);
+        items.add(tablets);
+        checkout.scanAllItems(items);
+        assertEquals(7.5, till.getCurrentSaleTotal(), 0.1);
+    }
+
+    @Test
+    public void bogofMixed() throws Exception {
+        ArrayList<Item> items = new ArrayList<>();
+        items.add(tablets);
+        items.add(tablets);
+        items.add(tablets);
+        items.add(catFood);
+        items.add(catFood);
+        checkout.scanAllItems(items);
+        assertEquals(13, till.getCurrentSaleTotal(), 0.1);
+    }
+
+        @Test
+    public void canChargeAllDiscounts() throws Exception {
+        Item bread = new Item("Bread", 2.0, true);
+        Item TV = new Item("Television", 300, false);
+        customer.aquireLoyaltyCard();
+        customer.emptyBasket();
+        customer.addItem(bread);
+        customer.addItem(bread);
+        customer.addItem(TV);
+
+        double actual = checkout.chargeCustomer();
+
+        assertEquals(266.36, actual, 0.01);
+
     }
 }
